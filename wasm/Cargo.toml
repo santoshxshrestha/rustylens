@@ -1,0 +1,18 @@
+[package]
+name = "wasm"
+version = "0.1.0"
+edition = "2024"
+authors = ["Santosh Shrestha <santoshxshrestha@gmail.com"]
+description = "WASM module for image processing"
+license = "MIT"
+homepage = "https://github.com/santoshxshrestha/rustylens"
+documentation = "https://github.com/santoshxshrestha/rustylens#readme"
+repository = "https://github.com/santoshxshrestha/rustylens"
+readme = "README.md"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+image = "0.25.9"
+wasm-bindgen = "0.2.106"

@@ -1,17 +1,19 @@
 {
-  description = "A nix flake for a Rust project using Actix-web framework";
+  description = "A nix flake for rustylens project";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
     naersk.url = "github:nix-community/naersk";
   };
 
-  outputs = { nixpkgs, naersk, ... }:
+  outputs =
+    { nixpkgs, naersk, ... }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
       naerskLib = pkgs.callPackage naersk { };
-    in {
+    in
+    {
       packages.${system}.default = naerskLib.buildPackage {
         src = ./.;
         buildInputs = [ pkgs.openssl ];
@@ -28,19 +30,19 @@
 
           openssl
 
-          yarn
           nodejs
           pnpm
-          # nodePackages.typescript
+          nodePackages.typescript
           nodePackages.eslint
           nodePackages.prettier
           nodePackages.typescript-language-server
+
+          wasm-pack
+          rocmPackages.llvm.lld
         ];
 
         nativeBuildInputs = [ pkgs.pkg-config ];
 
-        # env.RUST_SRC_PATH =
-        #   "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
       };
       formatter = pkgs.rustfmt;
     };
