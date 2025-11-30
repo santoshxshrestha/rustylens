@@ -41,5 +41,9 @@ yarn-error.log*
 next-env.d.ts
 
 
-# direnv 
+# direnv
 .direnv/
+
+
+# wasm
+/target
