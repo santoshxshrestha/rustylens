@@ -1,6 +1,6 @@
 "use client";
 
-import init, * as wasm from "../pkgs/wasm";
+import init, * as wasm from "wasm";
 import { useEffect, useState } from "react";
 
 let initPromise: Promise<unknown> | null = null;
