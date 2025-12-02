@@ -9,7 +9,6 @@
         "lint": "eslint"
     },
     "dependencies": {
-        "wasm": "file:./wasm/pkg/",
         "next": "16.0.5",
         "react": "19.2.0",
         "react-dom": "19.2.0"
