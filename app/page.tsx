@@ -51,9 +51,8 @@ export default function Home() {
       }
     })();
 
-    // Ensure the data is a proper BufferSource for Blob
-    const data = new Uint8Array(outBytes.buffer, outBytes.byteOffset, outBytes.byteLength);
-    const blob = new Blob([data], { type: mime });
+    const bytes = outBytes.slice();
+    const blob = new Blob([bytes.buffer], { type: mime });
 
     if (downloadUrl) URL.revokeObjectURL(downloadUrl);
     const url = URL.createObjectURL(blob);
