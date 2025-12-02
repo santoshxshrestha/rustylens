@@ -17,6 +17,9 @@ pub fn change_format(input: &[u8], format: &str) -> Vec<u8> {
         "jpeg" | "jpg" => convert(input, ImageFormat::Jpeg),
         "webp" => convert(input, ImageFormat::WebP),
         "bmp" => convert(input, ImageFormat::Bmp),
+        "avif" => convert(input, ImageFormat::Avif),
+        "hdr" => convert(input, ImageFormat::Hdr),
+        "ico" => convert(input, ImageFormat::Ico),
         _ => convert(input, ImageFormat::Png),
     }
 }
@@ -39,4 +42,18 @@ pub fn change_to_webp(input: &[u8]) -> Vec<u8> {
 #[wasm_bindgen]
 pub fn change_to_bmp(input: &[u8]) -> Vec<u8> {
     convert(input, ImageFormat::Bmp)
+}
+#[wasm_bindgen]
+pub fn change_to_avif(input: &[u8]) -> Vec<u8> {
+    convert(input, ImageFormat::Avif)
+}
+
+#[wasm_bindgen]
+pub fn change_to_hdr(input: &[u8]) -> Vec<u8> {
+    convert(input, ImageFormat::Hdr)
+}
+
+#[wasm_bindgen]
+pub fn change_to_ico(input: &[u8]) -> Vec<u8> {
+    convert(input, ImageFormat::Ico)
 }
