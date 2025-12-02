@@ -3,7 +3,13 @@
 
 export function change_format(input: Uint8Array, format: string): Uint8Array;
 
+export function change_to_avif(input: Uint8Array): Uint8Array;
+
 export function change_to_bmp(input: Uint8Array): Uint8Array;
+
+export function change_to_hdr(input: Uint8Array): Uint8Array;
+
+export function change_to_ico(input: Uint8Array): Uint8Array;
 
 export function change_to_jpeg(input: Uint8Array): Uint8Array;
 
@@ -16,7 +22,10 @@ export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembl
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly change_format: (a: number, b: number, c: number, d: number) => [number, number];
+  readonly change_to_avif: (a: number, b: number) => [number, number];
   readonly change_to_bmp: (a: number, b: number) => [number, number];
+  readonly change_to_hdr: (a: number, b: number) => [number, number];
+  readonly change_to_ico: (a: number, b: number) => [number, number];
   readonly change_to_jpeg: (a: number, b: number) => [number, number];
   readonly change_to_png: (a: number, b: number) => [number, number];
   readonly change_to_webp: (a: number, b: number) => [number, number];
