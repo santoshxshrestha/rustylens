@@ -23,24 +23,27 @@ export default function ThemeToggleHeader() {
     }
   }, [dark]);
 
-  return (
-    <header
-      className={clsx(
-        "w-full flex justify-between items-center px-4 py-3 border-b border-theme",
-        "bg-surface",
-      )}
-    >
-      <h1 className="text-lg font-semibold">RustyLens</h1>
-      <button
-        onClick={() => setDark((d) => !d)}
-        className={clsx(
-          "px-3 py-1 rounded text-sm transition-colors",
-          "text-white btn-accent",
-        )}
-        aria-label="Toggle dark mode"
-      >
-        {dark ? "Light" : "Dark"} Mode
-      </button>
-    </header>
-  );
+    return (
+        <header
+            className={clsx(
+                "w-full flex justify-between items-center px-4 py-3 border-b border-theme",
+                "bg-surface",
+            )}
+        >
+            <h1 className="text-lg font-semibold">RustyLens</h1>
+            <button
+                onClick={() => setDark((d) => !d)}
+                className={clsx(
+                    "px-3 py-1 rounded text-sm transition-colors",
+                    {
+                        "bg-gray-200 hover:bg-gray-300 text-black": !dark,
+                        "bg-gray-700 hover:bg-gray-600 text-white": dark,
+                    },
+                )}
+                aria-label="Toggle dark mode"
+            >
+                {dark ? "Light" : "Dark"} Mode
+            </button>
+        </header>
+    );
 }

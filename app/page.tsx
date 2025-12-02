@@ -44,7 +44,7 @@ export default function Home() {
 
   const handleConversion = async (file: File) => {
     if (!ready) return;
-    
+
     console.log("WASM is ready, starting conversion...");
 
     const inputBytes = new Uint8Array(await file.arrayBuffer());
@@ -92,10 +92,10 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center gap-4 p-4">
       <div className="flex flex-col items-center gap-4 p-4 border-2 border-gray-300 rounded-lg shadow-md w-full max-w-md">
-        <input 
-          ref={fileRef} 
-          type="file" 
-          accept="image/*" 
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
           className="w-full"
           onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
         />
