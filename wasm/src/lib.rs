@@ -1,30 +1,42 @@
-use std::io::Cursor;
-
 use image::ImageFormat;
+use std::io::Cursor;
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen]
-extern "C" {
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(s: &str);
+fn convert(input: &[u8], format: ImageFormat) -> Vec<u8> {
+    let img = image::load_from_memory(input).expect("Failed to load image");
+    let mut output = Vec::new();
+    img.write_to(&mut Cursor::new(&mut output), format)
+        .expect("Failed to write image");
+    output
 }
 
 #[wasm_bindgen]
-pub fn greet(name: &str) {
-    log(&format!("Hello, {}!", name));
+pub fn change_format(input: &[u8], format: &str) -> Vec<u8> {
+    match format.to_lowercase().as_str() {
+        "png" => convert(input, ImageFormat::Png),
+        "jpeg" | "jpg" => convert(input, ImageFormat::Jpeg),
+        "webp" => convert(input, ImageFormat::WebP),
+        "bmp" => convert(input, ImageFormat::Bmp),
+        _ => convert(input, ImageFormat::Png),
+    }
 }
+
 #[wasm_bindgen]
 pub fn change_to_png(input: &[u8]) -> Vec<u8> {
-    // Decode the input image
-    let img = image::load_from_memory(input).expect("Failed to load image");
+    convert(input, ImageFormat::Png)
+}
 
-    // Create a buffer to store the PNG output
-    let mut output = Vec::new();
+#[wasm_bindgen]
+pub fn change_to_jpeg(input: &[u8]) -> Vec<u8> {
+    convert(input, ImageFormat::Jpeg)
+}
 
-    // Save the image as PNG into the buffer
-    img.write_to(&mut Cursor::new(&mut output), ImageFormat::Png)
-        .expect("Failed to write image as PNG");
+#[wasm_bindgen]
+pub fn change_to_webp(input: &[u8]) -> Vec<u8> {
+    convert(input, ImageFormat::WebP)
+}
 
-    // Return the PNG image as a byte vector
-    output
+#[wasm_bindgen]
+pub fn change_to_bmp(input: &[u8]) -> Vec<u8> {
+    convert(input, ImageFormat::Bmp)
 }
