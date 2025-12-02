@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import useWasm from "./src/hooks/useWasm";
 
 export default function Home() {
@@ -16,6 +16,7 @@ export default function Home() {
   } = useWasm();
   const [format, setFormat] = useState<string>("png");
   const [downloadUrl, setDownloadUrl] = useState<string>("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const convertFn = useMemo(() => {
@@ -41,13 +42,10 @@ export default function Home() {
     }
   }, [format, change_to_png, change_to_jpeg, change_to_webp, change_to_bmp]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (ready) {
-      console.log("WASM is ready, starting conversion...");
-    }
-    const file = fileRef.current?.files?.[0];
-    if (!file) return;
+  const handleConversion = async (file: File) => {
+    if (!ready) return;
+    
+    console.log("WASM is ready, starting conversion...");
 
     const inputBytes = new Uint8Array(await file.arrayBuffer());
     const outBytes = convertFn(inputBytes);
@@ -77,21 +75,30 @@ export default function Home() {
   };
 
   const downloadName = useMemo(() => {
-    const name = fileRef.current?.files?.[0]?.name || "image";
+    const name = selectedFile?.name || "image";
     const base = name.includes(".")
       ? name.slice(0, name.lastIndexOf("."))
       : name;
     const ext = format === "jpg" ? "jpeg" : format;
     return `${base}.${ext}`;
-  }, [format]);
+  }, [format, selectedFile]);
+
+  useEffect(() => {
+    if (selectedFile && ready) {
+      handleConversion(selectedFile);
+    }
+  }, [selectedFile, format, ready]);
 
   return (
     <div className="flex flex-col items-center gap-4 p-4">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col items-center gap-4 p-4 border-2 border-gray-300 rounded-lg shadow-md w-full max-w-md"
-      >
-        <input ref={fileRef} type="file" accept="image/*" className="w-full" />
+      <div className="flex flex-col items-center gap-4 p-4 border-2 border-gray-300 rounded-lg shadow-md w-full max-w-md">
+        <input 
+          ref={fileRef} 
+          type="file" 
+          accept="image/*" 
+          className="w-full"
+          onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+        />
 
         <div className="flex items-center gap-2 w-full">
           <label htmlFor="format" className="text-sm font-medium">
@@ -109,15 +116,7 @@ export default function Home() {
             <option value="bmp">BMP</option>
           </select>
         </div>
-
-        <button
-          type="submit"
-          disabled={!ready}
-          className="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-700 transition-colors disabled:opacity-50"
-        >
-          Convert
-        </button>
-      </form>
+      </div>
 
       {downloadUrl && (
         <a
