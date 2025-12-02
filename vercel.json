@@ -1,0 +1,3 @@
+{
+ "buildCommand":"curl https://drager.github.io/wasm-pack/installer/init.sh -sSf | sh && ./build.sh && pnpm build"
+}
