@@ -7,8 +7,10 @@ export default function ThemeToggleHeader() {
     if (typeof window === "undefined") return false;
     const stored = localStorage.getItem("theme");
     if (stored) return stored === "dark";
-    return document.documentElement.classList.contains("dark") ||
-      (window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false);
+    return (
+      document.documentElement.classList.contains("dark") ||
+      (window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false)
+    );
   });
 
   useEffect(() => {
@@ -22,17 +24,18 @@ export default function ThemeToggleHeader() {
   }, [dark]);
 
   return (
-    <header className={clsx(
-      "w-full flex justify-between items-center px-4 py-3 border-b border-theme",
-      "bg-surface"
-    )}
+    <header
+      className={clsx(
+        "w-full flex justify-between items-center px-4 py-3 border-b border-theme",
+        "bg-surface",
+      )}
     >
       <h1 className="text-lg font-semibold">RustyLens</h1>
       <button
-        onClick={() => setDark(d => !d)}
+        onClick={() => setDark((d) => !d)}
         className={clsx(
           "px-3 py-1 rounded text-sm transition-colors",
-          "text-white btn-accent"
+          "text-white btn-accent",
         )}
         aria-label="Toggle dark mode"
       >
