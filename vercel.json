@@ -1,3 +1,0 @@
-{
-    "buildCommand": "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && curl https://drager.github.io/wasm-pack/installer/init.sh -sSf | sh && chmod +x build.sh && ./build.sh && pnpm install && pnpm build"
-}
