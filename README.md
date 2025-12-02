@@ -1,6 +1,6 @@
 # RustyLens
 
-WASM‑powered image format converter with a dark/light theme toggle. Built with Next.js + Rust (via `wasm-bindgen`).
+WASM‑powered image format converter. Built with Next.js + Rust (via `wasm-bindgen`).
 
 ## Demo Flow
 
