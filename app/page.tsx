@@ -113,7 +113,10 @@ export default function Home() {
             <option value="png">PNG</option>
             <option value="jpeg">JPEG</option>
             <option value="webp">WEBP</option>
+            <option value="ico">ICO</option>
             <option value="bmp">BMP</option>
+            <option value="hdr">HDR</option>
+            <option value="avif">AVIF</option>
           </select>
         </div>
       </div>
