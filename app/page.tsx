@@ -1,93 +1,76 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useWasm from "./src/hooks/useWasm";
-
+import {handleConversion} from "@/utils/handleConversion"
 export default function Home() {
-  const {
-    ready,
-    change_to_png,
-    change_to_jpeg,
-    change_to_webp,
-    change_to_bmp,
-    change_to_avif,
-    change_to_hdr,
-    change_to_ico,
-  } = useWasm();
-  const [format, setFormat] = useState<string>("png");
-  const [downloadUrl, setDownloadUrl] = useState<string>("");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const fileRef = useRef<HTMLInputElement | null>(null);
+    const {
+        ready,
+        change_to_png,
+        change_to_jpeg,
+        change_to_webp,
+        change_to_bmp,
+        change_to_avif,
+        change_to_hdr,
+        change_to_ico,
+    } = useWasm();
+    const fileRef = useRef<HTMLInputElement | null>(null);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [format, setFormat] = useState<string>("png");
+    const [convertFn, setConvertFn] = useState<(input: Uint8Array) => Uint8Array>(() => change_to_png);
+    const [downloadUrl, setDownloadUrl] = useState<string>("");
+    const [downloadName, setDownloadName] = useState<string>("");
 
-  const convertFn = useMemo(() => {
-    switch (format) {
-      case "jpeg":
-      case "jpg":
-        return change_to_jpeg;
-      case "webp":
-        return change_to_webp;
-      case "bmp":
-        return change_to_bmp;
-      case "png":
-        return change_to_png;
-      case "avif":
-        return change_to_avif;
-      case "hdr":
-        return change_to_hdr;
-      case "ico":
-        return change_to_ico;
+    useEffect(() => {
+        switch (format) {
+            case "jpeg":
+            case "jpg":
+                setConvertFn(() => change_to_jpeg);
+                break;
+            case "webp":
+                setConvertFn(() => change_to_webp);
+                break;
+            case "bmp":
+                setConvertFn(() => change_to_bmp);
+                break;
+            case "png":
+                setConvertFn(() => change_to_png);
+                break;
+            case "avif":
+                setConvertFn(() => change_to_avif);
+                break;
+            case "hdr":
+                setConvertFn(() => change_to_hdr);
+                break;
+            case "ico":
+                setConvertFn(() => change_to_ico);
+                break;
+            default:
+                setConvertFn(() => change_to_png);
+        }
+    }, [format, change_to_png, change_to_jpeg, change_to_webp, change_to_bmp, change_to_avif, change_to_hdr, change_to_ico]);
 
-      default:
-        return change_to_png;
-    }
-  }, [format, change_to_png, change_to_jpeg, change_to_webp, change_to_bmp]);
 
-  const handleConversion = async (file: File) => {
-    if (!ready) return;
-
-    console.log("WASM is ready, starting conversion...");
-
-    const inputBytes = new Uint8Array(await file.arrayBuffer());
-    const outBytes = convertFn(inputBytes);
-
-    const resolvedFormat = (format === "jpg" ? "jpeg" : format).toLowerCase();
-    const mime: string = (() => {
-      switch (resolvedFormat) {
-        case "jpeg":
-          return "image/jpeg";
-        case "png":
-          return "image/png";
-        case "webp":
-          return "image/webp";
-        case "bmp":
-          return "image/bmp";
-        default:
-          return "application/octet-stream";
-      }
-    })();
-
-    const bytes = outBytes.slice();
-    const blob = new Blob([bytes.buffer], { type: mime });
-
-    if (downloadUrl) URL.revokeObjectURL(downloadUrl);
-    const url = URL.createObjectURL(blob);
-    setDownloadUrl(url);
-  };
-
-  const downloadName = useMemo(() => {
-    const name = selectedFile?.name || "image";
-    const base = name.includes(".")
-      ? name.slice(0, name.lastIndexOf("."))
-      : name;
-    const ext = format === "jpg" ? "jpeg" : format;
-    return `${base}.${ext}`;
-  }, [format, selectedFile]);
-
-  useEffect(() => {
-    if (selectedFile && ready) {
-      handleConversion(selectedFile);
-    }
-  }, [selectedFile, format, ready]);
+    useEffect(() => {
+        if (selectedFile && ready) {
+            handleConversion(
+                {
+                    file: selectedFile,
+                    format,
+                    ready,
+                    convertFn,
+                    downloadUrl,
+                    setDownloadUrl,
+                }
+            );
+            const name = selectedFile?.name || "image";
+            const base = name.includes(".")
+                ? name.slice(0, name.lastIndexOf("."))
+                : name;
+            const ext = format === "jpg" ? "jpeg" : format;
+            setDownloadName(`${base}.${ext}`);
+        }
+    }, [selectedFile, format, ready]);
 
   return (
     <div className="flex flex-col items-center gap-4 p-4">
