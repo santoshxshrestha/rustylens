@@ -2,8 +2,8 @@ export default function Footer() {
     return (
         <footer
             className={
-                "w-full flex justify-start items-center px-4 py-4 sm:py-3 border-t border-theme " +
-                "bg-surface mt-auto"
+                "w-full flex justify-start items-center px-4 py-4 sm:py-3" +
+                "mt-auto"
             }
         >
             <a
