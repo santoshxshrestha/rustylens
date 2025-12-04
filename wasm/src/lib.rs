@@ -46,7 +46,7 @@ pub fn change_to_ico(input: &[u8]) -> Vec<u8> {
 }
 
 #[wasm_bindgen]
-pub fn generate_fractals(imgx: u32, imgy: u32) -> Vec<u8> {
+pub fn generate_fractals(imgx: u32, imgy: u32, format: &str) -> Vec<u8> {
     let scalex = 3.0 / imgx as f32;
     let scaley = 3.0 / imgy as f32;
 
@@ -77,10 +77,48 @@ pub fn generate_fractals(imgx: u32, imgy: u32) -> Vec<u8> {
             *pixel = image::Rgb([data[0], i as u8, data[2]]);
         }
     }
-
     let mut output = Vec::new();
-    imgbuf
-        .write_to(&mut Cursor::new(&mut output), ImageFormat::Png)
-        .expect("Failed to write image");
+    match format {
+        "png" => {
+            imgbuf
+                .write_to(&mut Cursor::new(&mut output), ImageFormat::Png)
+                .expect("Failed to write image");
+        }
+        "jpeg" => {
+            imgbuf
+                .write_to(&mut Cursor::new(&mut output), ImageFormat::Jpeg)
+                .expect("Failed to write image");
+        }
+        "webp" => {
+            imgbuf
+                .write_to(&mut Cursor::new(&mut output), ImageFormat::WebP)
+                .expect("Failed to write image");
+        }
+        "bmp" => {
+            imgbuf
+                .write_to(&mut Cursor::new(&mut output), ImageFormat::Bmp)
+                .expect("Failed to write image");
+        }
+        "avif" => {
+            imgbuf
+                .write_to(&mut Cursor::new(&mut output), ImageFormat::Avif)
+                .expect("Failed to write image");
+        }
+        "hdr" => {
+            imgbuf
+                .write_to(&mut Cursor::new(&mut output), ImageFormat::Hdr)
+                .expect("Failed to write image");
+        }
+        "ico" => {
+            imgbuf
+                .write_to(&mut Cursor::new(&mut output), ImageFormat::Ico)
+                .expect("Failed to write image");
+        }
+        _ => {
+            imgbuf
+                .write_to(&mut Cursor::new(&mut output), ImageFormat::Png)
+                .expect("Failed to write image");
+        }
+    }
     output
 }

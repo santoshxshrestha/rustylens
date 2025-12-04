@@ -15,7 +15,7 @@ export function change_to_png(input: Uint8Array): Uint8Array;
 
 export function change_to_webp(input: Uint8Array): Uint8Array;
 
-export function generate_fractals(imgx: number, imgy: number): Uint8Array;
+export function generate_fractals(imgx: number, imgy: number, format: string): Uint8Array;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
@@ -28,10 +28,11 @@ export interface InitOutput {
   readonly change_to_jpeg: (a: number, b: number) => [number, number];
   readonly change_to_png: (a: number, b: number) => [number, number];
   readonly change_to_webp: (a: number, b: number) => [number, number];
-  readonly generate_fractals: (a: number, b: number) => [number, number];
+  readonly generate_fractals: (a: number, b: number, c: number, d: number) => [number, number];
   readonly __wbindgen_externrefs: WebAssembly.Table;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_free: (a: number, b: number, c: number) => void;
+  readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
   readonly __wbindgen_start: () => void;
 }
 

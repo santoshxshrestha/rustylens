@@ -13,7 +13,7 @@ export default function JuliaPage() {
         if (!ready) return;
         console.log("WASM is ready, generating fractal...");
         const [width, height] = dimension.split("x").map(Number);
-        const fractalBytes = generate_fractals(width, height);
+        const fractalBytes = generate_fractals(width, height, format);
 
           const resolvedFormat = (format === "jpg" ? "jpeg" : format).toLowerCase();
           const mime: string = (() => {
