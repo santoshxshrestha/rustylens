@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import useWasm from "./src/hooks/useWasm";
 import {handleConversion} from "@/utils/handleConversion"
 import Footer from "./components/footer";
-import ThemeToggleHeader from "./components/ThemeToggleHeader";
 import UnleashJulia from "./components/UnleashJulia";
 
 export default function Home() {
@@ -78,8 +77,7 @@ export default function Home() {
     }, [selectedFile, format, ready]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <ThemeToggleHeader/>
+        <>
       <main className="grow flex flex-col items-center gap-6 px-4 py-8 sm:py-12">
         <div className="flex flex-col items-center gap-4 sm:gap-6 p-4 sm:p-6 border border-gray-300 dark:border-gray-600 rounded-lg shadow-md w-full max-w-md">
           <h1 className="text-xl sm:text-2xl font-bold text-center">Image Converter</h1>
@@ -127,8 +125,7 @@ export default function Home() {
         )}
         <UnleashJulia generate_fractals={generate_fractals} />
       </main>
-
       <Footer/>
-    </div>
+      </>
     );
 }
