@@ -23,6 +23,10 @@ export default function ThemeToggleHeader() {
     }
   }, [dark]);
 
+    const handleToggle = () => {
+        setDark((d) => !d);
+    }
+
     return (
         <header
             className={clsx(
@@ -32,7 +36,7 @@ export default function ThemeToggleHeader() {
         >
             <h1 className="text-lg font-semibold">RustyLens</h1>
             <button
-                onClick={() => setDark((d) => !d)}
+                onClick={handleToggle}
                 className={clsx(
                     "px-3 py-1 rounded text-sm transition-colors",
                     {
