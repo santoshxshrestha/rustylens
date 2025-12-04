@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { generate_fractals } from "../src/pkgs/wasm";
+import { useState,useEffect } from "react";
+import { generate_fractals } from "@/app/src/pkgs";
 
 export default function JuliaPage() {
     const [dimension, setDimension] = useState("800x800");
     const [format, setFormat] = useState("png");
     const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
-    function handleGenerate() {
+    useEffect(() => {
         const [width, height] = dimension.split("x").map(Number);
         const fractalBytes = generate_fractals(width, height);
 
@@ -39,7 +39,8 @@ export default function JuliaPage() {
 
         const url = URL.createObjectURL(blob);
         setDownloadUrl(url);
-    }
+    }, [dimension, format]);
+
 
     return (
     <>
@@ -52,7 +53,7 @@ export default function JuliaPage() {
             </label>
             <select
               id="dimension"
-              onChange={(e) => setFormat(e.target.value)}
+              onChange={(e) => setDimension(e.target.value)}
               className="flex-1 px-3 py-2 border rounded text-sm sm:text-base"
             >
                 <option value="800x800">800 x 800</option>
