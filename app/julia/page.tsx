@@ -1,13 +1,46 @@
 "use client";
 
 import { useState } from "react";
-import React from "react";
+import { generate_fractals } from "../src/pkgs/wasm";
+
 export default function JuliaPage() {
-    const [generate_fractals, setGenerateFractals] = useState(false);
-    const fileRef = React.useRef<HTMLInputElement>(null);
     const [dimension, setDimension] = useState("800x800");
     const [format, setFormat] = useState("png");
     const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+
+    function handleGenerate() {
+        const [width, height] = dimension.split("x").map(Number);
+        const fractalBytes = generate_fractals(width, height);
+
+          const resolvedFormat = (format === "jpg" ? "jpeg" : format).toLowerCase();
+          const mime: string = (() => {
+            switch (resolvedFormat) {
+              case "jpeg":
+                return "image/jpeg";
+              case "png":
+                return "image/png";
+              case "webp":
+                return "image/webp";
+              case "bmp":
+                return "image/bmp";
+              case "avif":
+                return "image/avif";
+              case "hdr":
+                return "image/vnd.radiance";
+              case "ico":
+                return "image/x-icon";
+              default:
+                return "application/octet-stream";
+            }
+          })();
+
+        const bytes = fractalBytes.slice();
+        const blob = new Blob([bytes.buffer], { type: mime });
+
+        const url = URL.createObjectURL(blob);
+        setDownloadUrl(url);
+    }
+
     return (
     <>
       <main className="grow flex flex-col items-center gap-6 px-4 py-8 sm:py-12">
@@ -19,7 +52,6 @@ export default function JuliaPage() {
             </label>
             <select
               id="dimension"
-              value={}
               onChange={(e) => setFormat(e.target.value)}
               className="flex-1 px-3 py-2 border rounded text-sm sm:text-base"
             >
@@ -30,7 +62,6 @@ export default function JuliaPage() {
                 <option value="3840x2160">3840 x 2160</option>
             </select>
           </div>
-        </div>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 w-full">
             <label htmlFor="format" className="text-sm sm:text-base font-medium whitespace-nowrap">
@@ -53,20 +84,20 @@ export default function JuliaPage() {
           </div>
         </div>
 
+
         {downloadUrl && (
           <a
             href={downloadUrl}
-            download={downloadName}
+            download="julia_fractal"
             className="flex items-center justify-center gap-2 w-full max-w-md px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-white font-semibold bg-linear-to-r from-green-500 to-emerald-600 rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
             </svg>
-            Download {downloadName}
+            Download
           </a>
         )}
-        <UnleashJulia generate_fractals={generate_fractals} />
-      </main>
+        </main>
     </>
     );
 }
