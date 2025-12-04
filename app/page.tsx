@@ -5,6 +5,7 @@ import useWasm from "./src/hooks/useWasm";
 import {handleConversion} from "@/utils/handleConversion"
 import Footer from "./components/footer";
 import ThemeToggleHeader from "./components/ThemeToggleHeader";
+import UnleashJulia from "./components/UnleashJulia";
 
 export default function Home() {
     const {
@@ -16,6 +17,7 @@ export default function Home() {
         change_to_avif,
         change_to_hdr,
         change_to_ico,
+        generate_fractals,
     } = useWasm();
     const fileRef = useRef<HTMLInputElement | null>(null);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -123,6 +125,7 @@ export default function Home() {
             Download {downloadName}
           </a>
         )}
+        <UnleashJulia generate_fractals={generate_fractals} />
       </main>
 
       <Footer/>
