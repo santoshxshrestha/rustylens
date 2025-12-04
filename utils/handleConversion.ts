@@ -50,4 +50,8 @@ export const handleConversion = async ({
   if (downloadUrl) URL.revokeObjectURL(downloadUrl);
   const url = URL.createObjectURL(blob);
   setDownloadUrl(url);
+
+  return () => {
+    URL.revokeObjectURL(url);
+  };
 };
