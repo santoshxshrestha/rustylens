@@ -1,14 +1,17 @@
 "use client";
 
 import { useState,useEffect } from "react";
-import { generate_fractals } from "@/app/src/pkgs";
+import useWasm from "../src/hooks/useWasm";
 
 export default function JuliaPage() {
+    const {ready, generate_fractals} = useWasm();
     const [dimension, setDimension] = useState("800x800");
     const [format, setFormat] = useState("png");
     const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
 
     useEffect(() => {
+        if (!ready) return;
+        console.log("WASM is ready, generating fractal...");
         const [width, height] = dimension.split("x").map(Number);
         const fractalBytes = generate_fractals(width, height);
 
