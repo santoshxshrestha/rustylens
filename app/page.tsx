@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import useWasm from "./src/hooks/useWasm";
 import {handleConversion} from "@/utils/handleConversion"
-import Footer from "./components/footer";
 import UnleashJulia from "./components/UnleashJulia";
 
 export default function Home() {
