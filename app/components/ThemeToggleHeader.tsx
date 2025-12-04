@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import clsx from "clsx";
+import Link from "next/link";
 
 export default function ThemeToggleHeader() {
   const [dark, setDark] = useState<boolean>(() => {
@@ -34,7 +35,8 @@ export default function ThemeToggleHeader() {
                 "bg-surface",
             )}
         >
-            <h1 className="text-lg font-semibold">RustyLens</h1>
+            <Link href="/" className="text-3xl border-b font-extrabold
+                ">RustyLens</Link>
             <button
                 onClick={handleToggle}
                 className={clsx(
