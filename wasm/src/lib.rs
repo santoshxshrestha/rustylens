@@ -12,20 +12,6 @@ fn convert(input: &[u8], format: ImageFormat) -> Vec<u8> {
 }
 
 #[wasm_bindgen]
-pub fn change_format(input: &[u8], format: &str) -> Vec<u8> {
-    match format.to_lowercase().as_str() {
-        "png" => convert(input, ImageFormat::Png),
-        "jpeg" | "jpg" => convert(input, ImageFormat::Jpeg),
-        "webp" => convert(input, ImageFormat::WebP),
-        "bmp" => convert(input, ImageFormat::Bmp),
-        "avif" => convert(input, ImageFormat::Avif),
-        "hdr" => convert(input, ImageFormat::Hdr),
-        "ico" => convert(input, ImageFormat::Ico),
-        _ => convert(input, ImageFormat::Png),
-    }
-}
-
-#[wasm_bindgen]
 pub fn change_to_png(input: &[u8]) -> Vec<u8> {
     convert(input, ImageFormat::Png)
 }
@@ -60,10 +46,7 @@ pub fn change_to_ico(input: &[u8]) -> Vec<u8> {
 }
 
 #[wasm_bindgen]
-pub fn generate_fractals() -> Vec<u8> {
-    let imgx = 800;
-    let imgy = 800;
-
+pub fn generate_fractals(imgx: u32, imgy: u32) -> Vec<u8> {
     let scalex = 3.0 / imgx as f32;
     let scaley = 3.0 / imgy as f32;
 
