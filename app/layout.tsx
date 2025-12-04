@@ -29,9 +29,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased transition-colors flex flex-col min-h-screen`}
       >
-          <ThemeToggleHeader/>
+        <ThemeToggleHeader />
         {children}
-                <Footer/>
+        <Footer />
       </body>
     </html>
   );
