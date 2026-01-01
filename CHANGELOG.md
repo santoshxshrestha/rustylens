@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- Added tagging workflow for releases
 - Initial changelog setup
 - First stable release v1.0.0
 
