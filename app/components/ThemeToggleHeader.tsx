@@ -4,15 +4,12 @@ import clsx from "clsx";
 import Link from "next/link";
 
 export default function ThemeToggleHeader() {
-  const [dark, setDark] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    const stored = localStorage.getItem("theme");
-    if (stored) return stored === "dark";
-    return (
-      document.documentElement.classList.contains("dark") ||
-      (window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false)
-    );
-  });
+    const [dark, setDark] = useState<boolean>(false);
+
+    useEffect(() => {
+        const stored = localStorage.getItem("theme");
+        setDark(stored==="dark");
+    },[])
 
   useEffect(() => {
     if (dark) {
