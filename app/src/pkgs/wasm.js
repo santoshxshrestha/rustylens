@@ -164,6 +164,23 @@ export function change_to_webp(input) {
 }
 
 /**
+ * @param {Uint8Array} input
+ * @param {number} quality
+ * @param {string} format
+ * @returns {Uint8Array}
+ */
+export function compress_image(input, quality, format) {
+    const ptr0 = passArray8ToWasm0(input, wasm.__wbindgen_malloc);
+    const len0 = WASM_VECTOR_LEN;
+    const ptr1 = passStringToWasm0(format, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
+    const len1 = WASM_VECTOR_LEN;
+    const ret = wasm.compress_image(ptr0, len0, quality, ptr1, len1);
+    var v3 = getArrayU8FromWasm0(ret[0], ret[1]).slice();
+    wasm.__wbindgen_free(ret[0], ret[1] * 1, 1);
+    return v3;
+}
+
+/**
  * @param {number} imgx
  * @param {number} imgy
  * @param {string} format
