@@ -45,9 +45,18 @@ Exports (via `#[wasm_bindgen]`):
 - `change_to_jpeg(input: &[u8]) -> Vec<u8>`
 - `change_to_webp(input: &[u8]) -> Vec<u8>`
 - `change_to_bmp(input: &[u8]) -> Vec<u8>`
+- `compress_image(input: &[u8], quality: u8, format: &str) -> Vec<u8>`: Compresses image with variable quality.
 - Generic helper `change_format` for potential future dynamic dispatch.
 
 Common conversion logic lives in a small helper `convert` wrapping `image::load_from_memory` and `DynamicImage::write_to`.
+
+## Features
+
+### Image Compressor
+High-performance, client-side image compression.
+- **Adjustable Quality:** Control the file size vs. quality trade-off.
+- **Live Preview:** See exactly how much space you're saving before downloading.
+- **Privacy First:** All processing happens in your browser via WASM; your images never leave your machine.
 
 ### Building / Updating WASM
 

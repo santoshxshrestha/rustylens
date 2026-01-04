@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import useWasm from "./src/hooks/useWasm";
 import { handleConversion } from "@/utils/handleConversion";
 import UnleashJulia from "./components/UnleashJulia";
+import CompressImage from "./components/Compress";
 
 export default function Home() {
   const {
@@ -144,6 +145,7 @@ export default function Home() {
             Download {downloadName}
           </a>
         )}
+        <CompressImage />
         <UnleashJulia />
       </main>
     </>

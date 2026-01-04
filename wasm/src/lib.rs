@@ -1,4 +1,8 @@
-use image::ImageFormat;
+use image::codecs;
+use image::{
+    GenericImageView, ImageEncoder, ImageFormat,
+    codecs::png::{CompressionType, FilterType},
+};
 use num_complex;
 use std::io::Cursor;
 use wasm_bindgen::prelude::*;
@@ -118,6 +122,31 @@ pub fn generate_fractals(imgx: u32, imgy: u32, format: &str) -> Vec<u8> {
             imgbuf
                 .write_to(&mut Cursor::new(&mut output), ImageFormat::Png)
                 .expect("Failed to write image");
+        }
+    }
+    output
+}
+
+#[wasm_bindgen]
+pub fn compress_image(input: &[u8], quality: u8, format: &str) -> Vec<u8> {
+    let img = match image::load_from_memory(input) {
+        Ok(i) => i,
+        Err(_) => return Vec::new(),
+    };
+    let mut output = Vec::new();
+    match format {
+        "jpeg" => {
+            let mut encoder = codecs::jpeg::JpegEncoder::new_with_quality(&mut output, quality);
+            let _ = encoder.encode_image(&img);
+        }
+        _ => {
+            let encoder = codecs::png::PngEncoder::new_with_quality(
+                &mut output,
+                CompressionType::Level(quality),
+                FilterType::NoFilter,
+            );
+            let (width, height) = img.dimensions();
+            let _ = encoder.write_image(img.as_bytes(), width, height, img.color().into());
         }
     }
     output
