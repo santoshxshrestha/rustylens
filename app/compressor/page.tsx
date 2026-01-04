@@ -11,54 +11,49 @@ export default function Compressor() {
     const [downloadUrl, setDownloadUrl] = useState<string>("")
     const [downloadName, setDownloadName] = useState<string>("")
     const [quality, setQuality] = useState<number>(80)
+    const [{initialSize, outputSize}, setSizes] = useState<{initialSize: number; outputSize: number}>({initialSize: 0, outputSize: 0});
 
     useEffect(() => {
+        let isCancelled = false;
+        let currentUrl: string | null = null;
+
         if (selectedFile && ready) {
             (async () => {
                 console.log("WASM is ready, starting compression...");
 
-                // Determine initial format from file extension
                 const initialFormat = selectedFile.name.split('.').pop() || 'png';
+                let currentFormat = format;
 
-                // Set format based on initial format
-                switch(initialFormat.toLowerCase()) {
-                    case "jpeg": setFormat("jpeg"); break;
-                    case "jpg": setFormat("jpeg"); break;
-                    default:
-                        setFormat("png");
+                // Set format based on initial format if it's the first time
+                if (format === "png" && (initialFormat.toLowerCase() === "jpeg" || initialFormat.toLowerCase() === "jpg")) {
+                    currentFormat = "jpeg";
+                    setFormat("jpeg");
                 }
 
-                // Set download name
-                setDownloadName(selectedFile.name.replace(/\.[^/.]+$/, "") + `_compressed.${format}`);
-
                 const inputBytes = new Uint8Array(await selectedFile.arrayBuffer());
-                const outBytes = compress_image(inputBytes,quality,format);
+                if (isCancelled) return;
 
-                // Determine MIME type already relolved the jpg to jpeg so no need to check for jpg here
-                const mime: string = (() => {
-                    switch (format) {
-                        case "jpeg":
-                            return "image/jpeg";
-                        case "png":
-                            return "image/png";
-                        default:
-                            return "image/png";
-                    }
-                })();
+                const outBytes = compress_image(inputBytes, quality, currentFormat);
+                if (isCancelled) return;
 
-                const bytes = outBytes.slice();
-                const blob = new Blob([bytes.buffer], { type: mime });
+                console.log("initialsize:", inputBytes.length, "outsize:", outBytes.length, "difference:", inputBytes.length - outBytes.length);
+                setSizes({initialSize: inputBytes.length, outputSize: outBytes.length});
 
-                if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+                const mime = currentFormat === "jpeg" ? "image/jpeg" : "image/png";
+                const blob = new Blob([new Uint8Array(outBytes)], { type: mime });
                 const url = URL.createObjectURL(blob);
-                setDownloadUrl(url);
+                currentUrl = url;
 
-                return () => {
-                    URL.revokeObjectURL(url);
-                };
+                setDownloadName(selectedFile.name.replace(/\.[^/.]+$/, "") + `_compressed.${currentFormat}`);
+                setDownloadUrl(url);
             })();
         }
-    }, [selectedFile, format, ready,quality]);
+
+        return () => {
+            isCancelled = true;
+            if (currentUrl) URL.revokeObjectURL(currentUrl);
+        };
+    }, [selectedFile, format, ready, quality, compress_image]);
 
     return (
         <>
@@ -94,6 +89,23 @@ export default function Compressor() {
                         />
                         <span className="w-10 text-right text-sm sm:text-base font-medium">{quality}%</span>
                     </div>
+                    {initialSize > 0 && (
+                        <div className="w-full grid grid-cols-2 gap-4 text-sm sm:text-base border-t border-gray-200 dark:border-gray-700 pt-4">
+                            <div className="flex flex-col">
+                                <span className="text-gray-500 dark:text-gray-400">Original Size</span>
+                                <span className="font-semibold">{(initialSize / 1024).toFixed(2)} KB</span>
+                            </div>
+                            <div className="flex flex-col text-right">
+                                <span className="text-gray-500 dark:text-gray-400">Compressed Size</span>
+                                <span className={`font-semibold ${outputSize < initialSize ? "text-green-500" : "text-amber-500"}`}>
+                                    {(outputSize / 1024).toFixed(2)} KB
+                                </span>
+                            </div>
+                            <div className="col-span-2 text-center text-xs text-gray-400">
+                                Reduction: {(((initialSize - outputSize) / initialSize) * 100).toFixed(1)}%
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {downloadUrl && (

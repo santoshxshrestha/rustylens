@@ -1,7 +1,6 @@
-#![allow(unused)]
 use image::codecs;
 use image::{
-    ImageFormat,
+    GenericImageView, ImageEncoder, ImageFormat,
     codecs::png::{CompressionType, FilterType},
 };
 use num_complex;
@@ -130,20 +129,24 @@ pub fn generate_fractals(imgx: u32, imgy: u32, format: &str) -> Vec<u8> {
 
 #[wasm_bindgen]
 pub fn compress_image(input: &[u8], quality: u8, format: &str) -> Vec<u8> {
-    let img = image::load_from_memory(input).expect("Failed to load image");
+    let img = match image::load_from_memory(input) {
+        Ok(i) => i,
+        Err(_) => return Vec::new(),
+    };
     let mut output = Vec::new();
     match format {
         "jpeg" => {
             let mut encoder = codecs::jpeg::JpegEncoder::new_with_quality(&mut output, quality);
-            encoder.encode_image(&img).unwrap();
+            let _ = encoder.encode_image(&img);
         }
         _ => {
-            let png = convert(input, ImageFormat::Png);
-            let mut encoder = codecs::png::PngEncoder::new_with_quality(
+            let encoder = codecs::png::PngEncoder::new_with_quality(
                 &mut output,
                 CompressionType::Level(quality),
                 FilterType::NoFilter,
             );
+            let (width, height) = img.dimensions();
+            let _ = encoder.write_image(img.as_bytes(), width, height, img.color().into());
         }
     }
     output
